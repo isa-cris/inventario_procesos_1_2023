@@ -54,6 +54,23 @@ public class UserController {
             return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
     }
+    @PutMapping(value = "/user/{id}")
+    public  ResponseEntity updateUser(@PathVariable Long id, @RequestBody User user) {
+        Map response = new HashMap();
+        Boolean userDB = userServiceImp.updateUser(id, user);
+        try {
+            if (userDB == null) {
+                response.put("status", "201");
+                response.put("massage", "se creo encontro usuario");
+                return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity(userServiceImp.getUser(id), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            response.put("status", "201");
+            response.put("massage", "se creo encontro usuario");
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+            }
+    }
 
 }
 

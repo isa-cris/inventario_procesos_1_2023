@@ -18,6 +18,7 @@ public class User {
     private String lastName;
     private String address;
     private String email;
+    @Column(name = "password")
     private String password;
     private Date birthday;
 }
