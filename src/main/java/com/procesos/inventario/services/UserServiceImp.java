@@ -30,7 +30,7 @@ public class UserServiceImp implements UserService {
     @Override
     public List<User> alluser() {
         return userRepository.findAll();
-    }
+    }//lista de todos los usuarios
 
     @Override
     public Boolean updateUser(Long id, User user) {
