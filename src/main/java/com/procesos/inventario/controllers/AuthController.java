@@ -30,7 +30,7 @@ public class AuthController {
         try{
             data.put("token",userService.login(user));
             apiResponse = new ApiResponse(Constants.USER_LOGIN, data);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(apiResponse,HttpStatus.OK);
         } catch (Exception e){
             apiResponse = new ApiResponse(e.getMessage(), "");
             return new ResponseEntity<>(apiResponse,HttpStatus.NOT_FOUND);
