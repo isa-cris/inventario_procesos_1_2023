@@ -3,6 +3,7 @@ import com.procesos.inventario.models.User;
 import com.procesos.inventario.repository.UserRepository;
 import com.procesos.inventario.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -16,6 +17,8 @@ public class UserServiceImp implements UserService {
     private UserRepository userRepository;
     @Autowired
     private JWTUtil jwtutil;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User getUser(Long id) {
         return userRepository.findById(id).get();
@@ -24,6 +27,7 @@ public class UserServiceImp implements UserService {
     @Override
     public Boolean createUser(User user) {
         try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             return true;
         }catch (Exception e){
@@ -44,6 +48,7 @@ public class UserServiceImp implements UserService {
         userBD.setLastName(user.getLastName());
         userBD.setAddress(user.getAddress());
         userBD.setBirthday(user.getBirthday());
+        userBD.setPassword(passwordEncoder.encode(user.getPassword()));
         User userUp = userRepository.save(userBD);
         return true;
     }catch (Exception e){
@@ -56,7 +61,7 @@ public class UserServiceImp implements UserService {
         if (userBd.isEmpty()){
             throw new RuntimeException("Usuario no encontrado");
         }
-        if (!userBd.get().getPassword().equals(user.getPassword())){
+        if (!passwordEncoder.matches(user.getPassword(),userBd.get().getPassword())){
             throw new RuntimeException("La contraseña es incorecta");
         }
         return jwtutil.create(String.valueOf(userBd.get().getId()),
